@@ -30,10 +30,11 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsVi
     public void onBindViewHolder(NewsViewHolder holder, int position) {
         if (mNews != null) {
             News current = mNews.get(position);
-            holder.newsItemView.setText(current.getTitle());
+            holder.newsHeaderTv.setText(current.getTitle());
+            holder.newsDecsTV.setText(current.getDescription());
         } else {
             // Covers the case of data not being ready yet.
-            holder.newsItemView.setText("No Word");
+            holder.newsHeaderTv.setText("No News");
         }
     }
 
@@ -52,11 +53,13 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsVi
     }
 
     class NewsViewHolder extends RecyclerView.ViewHolder {
-        private final TextView newsItemView;
+        private final TextView newsHeaderTv;
+        private final TextView newsDecsTV;
 
         private NewsViewHolder(View itemView) {
             super(itemView);
-            newsItemView = itemView.findViewById(R.id.news_header_tv);
+            newsHeaderTv = itemView.findViewById(R.id.news_header_tv);
+            newsDecsTV = itemView.findViewById(R.id.news_desc_tv);
         }
     }
 }

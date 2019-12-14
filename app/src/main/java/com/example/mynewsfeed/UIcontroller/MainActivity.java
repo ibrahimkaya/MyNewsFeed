@@ -33,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerLayout);
         final NewsListAdapter adapter = new NewsListAdapter(this);
@@ -49,9 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 adapter.setNews(news);
             }
         });
-
         loadXml();
-
     }
 
     @Override
