@@ -24,7 +24,8 @@ import android.view.MenuItem;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    NetworkActivity n =new NetworkActivity();
+
+    NetworkActivity networkActivity =new NetworkActivity();
     private NewsViewModel mNewsViewModel;
 
 
@@ -48,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
                 adapter.setNews(news);
             }
         });
+
+        loadXml();
+
     }
 
     @Override
@@ -73,20 +77,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void button(View view) {
+        parserToRoom();
+    }
 
-        NewsParser.News ns = new NewsParser.News("","","","","","");
-        n.loadPage();
-        if(n.getFetchedNews() != null) {
-            for(int i = 0; i<n.getFetchedNews().size();i++) {
-                Log.d("donen", n.getFetchedNews().get(i).category);
-                ns = n.getFetchedNews().get(i);
-                News mNs = new News(ns.title, ns.description, ns.link, ns.pubDate, ns.creator, ns.category);
-                mNewsViewModel.insert(mNs);
+    public void parserToRoom(){
+        NewsParser.News fetchedNews;
+        News mTempNews;
+        //start parsing xml
+        networkActivity.loadPage();
+        //if parsing complate
+        if(networkActivity.getFetchedNews() != null){
+            //generate entity onbject for item list size
+            for(int i = 0; i< networkActivity.getFetchedNews().size(); i++) {
+                //get ith element
+                fetchedNews = networkActivity.getFetchedNews().get(i);
+                mTempNews  = new News(fetchedNews.title,
+                                    fetchedNews.description,
+                                    fetchedNews.link,
+                                    fetchedNews.pubDate,
+                                    fetchedNews.creator,
+                                    fetchedNews.category);
+                //insert my entity
+                mNewsViewModel.insert(mTempNews);
             }
         }
     }
 
-
-
+    public void loadXml(){
+        networkActivity.loadPage();
+    }
 
 }
