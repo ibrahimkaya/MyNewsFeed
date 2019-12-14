@@ -15,13 +15,13 @@ public class NewsRepository {
     private NewsDao mNewsDao;
     private LiveData<List<News>> mAllNews;
 
-    NewsRepository(Application application){
+    public NewsRepository(Application application){
         NewsRoomDatabase db = NewsRoomDatabase.getDatabase(application);
         mNewsDao = db.newsDao();
         mAllNews = mNewsDao.getAllNews();
     }
 
-    LiveData<List<News>> getmAllNews(){
+    public LiveData<List<News>> getmAllNews(){
         return mAllNews;
     }
 
@@ -38,7 +38,7 @@ public class NewsRepository {
 
         @Override
         protected Void doInBackground(final News... params){
-            mAsyncTaskDao.insert(params);
+            for (News param : params) mAsyncTaskDao.insert(param);
             return null;
         }
 
