@@ -37,7 +37,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsVi
         }
     }
 
-    public void setWords(List<News> news){
+    public void setNews(List<News> news){
         mNews = news;
         notifyDataSetChanged();
     }
