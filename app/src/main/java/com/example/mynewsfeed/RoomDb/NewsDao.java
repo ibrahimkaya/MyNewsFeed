@@ -1,5 +1,6 @@
 package com.example.mynewsfeed.RoomDb;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
@@ -26,6 +27,9 @@ public interface NewsDao {
 
     @Query("UPDATE news_table SET valid_category = :categoryValidnes WHERE category =:category")
     void setCategoryValidnes(String categoryValidnes, String category);
+
+    @Query("SELECT category FROM news_table WHERE valid_category = 'false'")
+    LiveData<ArrayList<String>> getAllNonVaildCategory ();
 
     @Query("SELECT pubDate FROM news_table WHERE title =:title")
     String getPubDate(String title);
