@@ -1,6 +1,5 @@
 package com.example.mynewsfeed.Parser;
 
-import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -41,7 +40,6 @@ public class NewsParser {
             }
             String name = parser.getName();
             if (name.equals("item")) {
-                Log.d("donen","getname ++item  "+parser.getName());
                 news.add(readNews(parser));
             } else {
                 skip(parser);
@@ -148,8 +146,6 @@ public class NewsParser {
         parser.require(XmlPullParser.START_TAG, ns, "category");
         String category  = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, "category");
-        Log.d("donen","getname ++text  "+ category);
-
         return category ;
     }
 
