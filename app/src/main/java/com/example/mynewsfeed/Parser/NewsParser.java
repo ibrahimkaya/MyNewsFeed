@@ -58,16 +58,18 @@ public class NewsParser {
             public final String pubDate;
             public final String creator;
             public final String category ;
+            public final Boolean  isValidCategory ;
 
 
 
-     private News(String title, String description, String link, String pubDate, String creator,String category){
+     public News(String title, String description, String link, String pubDate, String creator,String category){
          this.title = title;
          this.description = description;
          this.link = link;
          this.pubDate = pubDate;
          this.creator = creator;
          this.category = category;
+         this.isValidCategory = true;
      }
 }
 
@@ -78,7 +80,8 @@ public class NewsParser {
         String link = null;
         String pubDate = null;
         String creator = null;
-        ArrayList<String> category  = new ArrayList<>();
+        ArrayList<String> categoryList  = new ArrayList<>();
+        String defaultCategory = "default" ;
 
         while(parser.next() != XmlPullParser.END_TAG){
             if(parser.getEventType() != XmlPullParser.START_TAG){
@@ -94,7 +97,7 @@ public class NewsParser {
             }else if(name.equals("pubDate")){
                 pubDate = readPubDate(parser);
             }else if(name.equals("category")){
-                category.add(readcategory(parser));
+                categoryList.add(readcategory(parser));
             }else if(name.equals("dc:creator")){
                 creator = readCreator(parser);
             }
@@ -102,7 +105,11 @@ public class NewsParser {
                 skip(parser);
             }
         }
-        return  new News(title, description,link,pubDate,creator,category.get(0));
+        //if  have any category, update default category
+        if(categoryList.size() != 0){
+            defaultCategory = categoryList.get(0);
+        }
+        return  new News(title, description,link,pubDate,creator,defaultCategory);
 }
 
     private String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
@@ -130,8 +137,6 @@ public class NewsParser {
         parser.require(XmlPullParser.START_TAG,ns,"link");
         link = readText(parser);
         parser.require(XmlPullParser.END_TAG,ns,"link");
-        //kendi rss yapına göre daha sonra  kodla
-
         return link;
     }
 
