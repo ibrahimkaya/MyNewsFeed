@@ -1,5 +1,6 @@
 package com.example.mynewsfeed.Parser;
 
+import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -22,7 +23,8 @@ public class NewsParser {
             parser.setInput(in, null);
             parser.nextTag();
             return readFeed(parser);
-        }finally {
+        }
+        finally {
             in.close();
         }
     }
@@ -30,37 +32,44 @@ public class NewsParser {
     private List readFeed(XmlPullParser parser) throws XmlPullParserException,IOException{
         List news = new ArrayList();
 
-        parser.require(XmlPullParser.START_TAG, ns, "item");
+        parser.require(XmlPullParser.START_TAG, ns, "rss");
+        parser.next();
+        parser.next();
         while(parser.next() != XmlPullParser.END_TAG){
-            if (parser.getEventType() != XmlPullParser.START_TAG){
+            if(parser.getEventType() != XmlPullParser.START_TAG){
                 continue;
             }
             String name = parser.getName();
-            //looking for item tag, this will dedicate for xml desing
-            if(name.equals("item")){
+            if (name.equals("item")) {
+                Log.d("donen","getname ++item  "+parser.getName());
                 news.add(readNews(parser));
-            }else{
+            } else {
                 skip(parser);
             }
+
         }
+
         return news;
     }
 
     //model
     public static class News{
-     public final String title;
-     public final String description;
-     public final String link;
-     public final String pubDate;
-     public final String source;
+            public final String title;
+            public final String description;
+            public final String link;
+            public final String pubDate;
+            public final String creator;
+            public final ArrayList<String> category ;
 
 
-     private News(String title, String description, String link, String pubDate, String source){
+
+     private News(String title, String description, String link, String pubDate, String creator,ArrayList<String> category){
          this.title = title;
          this.description = description;
          this.link = link;
          this.pubDate = pubDate;
-         this.source = source;
+         this.creator = creator;
+         this.category = category;
      }
 }
 
@@ -70,7 +79,8 @@ public class NewsParser {
         String description = null;
         String link = null;
         String pubDate = null;
-        String source = null;
+        String creator = null;
+        ArrayList<String> category  = new ArrayList<>();
 
         while(parser.next() != XmlPullParser.END_TAG){
             if(parser.getEventType() != XmlPullParser.START_TAG){
@@ -85,13 +95,16 @@ public class NewsParser {
                 link = readLink(parser);
             }else if(name.equals("pubDate")){
                 pubDate = readPubDate(parser);
-            }else if(name.equals("source")){
-                source = readSource(parser);
-            }else{
+            }else if(name.equals("category")){
+                category.add(readcategory(parser));
+            }else if(name.equals("dc:creator")){
+                creator = readCreator(parser);
+            }
+            else{
                 skip(parser);
             }
         }
-        return  new News(title, description,link,pubDate,source);
+        return  new News(title, description,link,pubDate,creator,category);
 }
 
     private String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
@@ -107,10 +120,18 @@ public class NewsParser {
         parser.require(XmlPullParser.END_TAG, ns,"description");
         return description;
     }
+    private String readCreator(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, ns,"dc:creator");
+        String creator = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns,"dc:creator");
+        return creator;
+    }
 
     private String readLink(XmlPullParser parser) throws IOException, XmlPullParserException{
         String link = "";
         parser.require(XmlPullParser.START_TAG,ns,"link");
+        link = readText(parser);
+        parser.require(XmlPullParser.END_TAG,ns,"link");
         //kendi rss yapına göre daha sonra  kodla
 
         return link;
@@ -123,11 +144,13 @@ public class NewsParser {
         return pubDate;
     }
 
-    private String readSource(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, ns, "source ");
-        String source  = readText(parser);
-        parser.require(XmlPullParser.END_TAG, ns, "source ");
-        return source ;
+    private String readcategory(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, ns, "category");
+        String category  = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns, "category");
+        Log.d("donen","getname ++text  "+ category);
+
+        return category ;
     }
 
     private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
