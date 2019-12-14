@@ -13,25 +13,25 @@ public class News {
 
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = "title_c")
+    @ColumnInfo(name = "title")
     String title;
 
-    @ColumnInfo(name = "description_c")
+    @ColumnInfo(name = "description")
     String description;
 
-    @ColumnInfo(name = "link_c")
+    @ColumnInfo(name = "link")
     String link;
 
-    @ColumnInfo(name = "pubDate_c")
+    @ColumnInfo(name = "pubDate")
     String pubDate;
 
-    @ColumnInfo(name = "creator_c")
+    @ColumnInfo(name = "creator")
     String creator;
 
-    @ColumnInfo(name = "category_C")
+    @ColumnInfo(name = "category")
     String category ;
 
-    @ColumnInfo(name = "valid_category_c")
+    @ColumnInfo(name = "valid_category")
     boolean isValidCategory = true;
 
     public News(@NonNull String title, String description, String link, String pubDate, String creator,String category){
