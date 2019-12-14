@@ -25,7 +25,7 @@ public class NewsViewModel extends AndroidViewModel {
         return mAllNews;
     }
 
-    public void insert(News...news){
+    public void insert(News news){
         mRepository.insert(news);
     }
 }
