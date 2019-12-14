@@ -2,6 +2,9 @@ package com.example.mynewsfeed.Parser;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.util.Log;
+
+import com.example.mynewsfeed.ViewModel.NewsViewModel;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -16,6 +19,8 @@ public class NetworkActivity extends Activity {
     public static final String WIFI = "Wi-Fi";
     public static final String ANY = "Any";
     private static final String URL = "https://rss.nytimes.com/services/xml/rss/nyt/World.xml";
+
+    protected   List<NewsParser.News> fetchedNews;
 /*
     // Whether there is a Wi-Fi connection.
     private static boolean wifiConnected = false;
@@ -69,6 +74,7 @@ public class NetworkActivity extends Activity {
         try{
             stream = dowlandUrl(urlString);
             newsS = newsParser.parse(stream);
+            fetchedNews = newsS;
         } finally {
             if(stream != null){
                 stream.close();
@@ -88,5 +94,9 @@ public class NetworkActivity extends Activity {
         conn.connect();
 
         return conn.getInputStream();
+    }
+
+    public  List<NewsParser.News> getFetchedNews(){
+         return fetchedNews;
     }
 }
