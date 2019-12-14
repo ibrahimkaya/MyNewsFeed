@@ -6,11 +6,12 @@ import java.util.List;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 @Dao
 public interface NewsDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(News news);
 
     @Query("DELETE FROM news_table")
@@ -29,7 +30,7 @@ public interface NewsDao {
     void setCategoryValidnes(String categoryValidnes, String category);
 
     @Query("SELECT category FROM news_table WHERE valid_category = 'false'")
-    LiveData<ArrayList<String>> getAllNonVaildCategory ();
+    LiveData<List<String>> getAllNonVaildCategory ();
 
     @Query("SELECT pubDate FROM news_table WHERE title =:title")
     String getPubDate(String title);
