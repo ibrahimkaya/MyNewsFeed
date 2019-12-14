@@ -57,11 +57,11 @@ public class NewsParser {
             public final String link;
             public final String pubDate;
             public final String creator;
-            public final ArrayList<String> category ;
+            public final String category ;
 
 
 
-     private News(String title, String description, String link, String pubDate, String creator,ArrayList<String> category){
+     private News(String title, String description, String link, String pubDate, String creator,String category){
          this.title = title;
          this.description = description;
          this.link = link;
@@ -102,7 +102,7 @@ public class NewsParser {
                 skip(parser);
             }
         }
-        return  new News(title, description,link,pubDate,creator,category);
+        return  new News(title, description,link,pubDate,creator,category.get(0));
 }
 
     private String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
