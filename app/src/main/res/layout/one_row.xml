@@ -11,6 +11,8 @@
         android:layout_height="wrap_content"
         android:text="header of news"
         android:layout_marginTop="16dp"
+        android:background="@color/colorDesc"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintTop_toTopOf="parent"
         />
 
@@ -21,6 +23,7 @@
         android:text="description of news"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="8dp"
+        android:background="@color/colorNewsHead2"
         app:layout_constraintTop_toBottomOf="@id/news_header_tv"
         />
 
