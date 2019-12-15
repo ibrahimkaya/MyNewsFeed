@@ -24,10 +24,13 @@ public interface NewsDao {
     LiveData<List<News>> getAllNews();
 
     @Query("SELECT valid_category FROM news_table WHERE title = :title")
-    boolean getCategoryValidnes (String title);
+    Boolean getCategoryValidnes (String title);
 
-    @Query("UPDATE news_table SET valid_category = :categoryValidnes WHERE category =:category")
-    void setCategoryValidnes(String categoryValidnes, String category);
+    @Query("UPDATE news_table SET valid_category = 'false' WHERE category =:category")
+    void setCategoryFalse ( String category);
+
+    @Query("UPDATE news_table SET valid_category = 'true' WHERE category =:category")
+    void setCategoryTrue ( String category);
 
     @Query("SELECT category FROM news_table WHERE valid_category = 'false'")
     LiveData<List<String>> getAllNonVaildCategory ();
