@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsViewHolder> {
 
     private final LayoutInflater mInflater;
-    private List<News> mNews; // Cached copy of words
+    private List<News> mNews; // Cached copy of news
 
     public NewsListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
 
@@ -41,6 +41,10 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsVi
     public void setNews(List<News> news){
         mNews = news;
         notifyDataSetChanged();
+    }
+
+    public News getNewsAtPosition(int position){
+        return mNews.get(position);
     }
 
     // getItemCount() is called many times, and when it is first called,

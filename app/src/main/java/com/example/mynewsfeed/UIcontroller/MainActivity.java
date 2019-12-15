@@ -10,16 +10,19 @@ import com.example.mynewsfeed.RoomDb.News;
 import com.example.mynewsfeed.UIcontroller.Adapter.NewsListAdapter;
 import com.example.mynewsfeed.ViewModel.NewsViewModel;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -50,6 +53,32 @@ public class MainActivity extends AppCompatActivity {
                 adapter.setNews(news);
             }
         });
+
+        ItemTouchHelper helper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT |ItemTouchHelper.RIGHT) {
+                    @Override
+                    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                        int position = viewHolder.getAdapterPosition();
+                        News mNews = adapter.getNewsAtPosition(position);
+
+                        switch (direction){
+                            case ItemTouchHelper.LEFT:
+                                readNews(mNews);
+                                break;
+                            case ItemTouchHelper.RIGHT:
+                                break;
+                        }
+                        adapter.notifyItemChanged(position);
+                    }
+                }
+        );
+        helper.attachToRecyclerView(recyclerView);
+
         loadXml();
     }
 
@@ -74,7 +103,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void button(View view) {
-
+        Toast.makeText(this,"clearing all data! ", Toast.LENGTH_LONG).show();
+        mNewsViewModel.deleteAll();
     }
 
     public void fetchAndRoom(){
@@ -117,6 +147,15 @@ public class MainActivity extends AppCompatActivity {
             case R.id.refresh_menu:
                 fetchAndRoom();
         }
+
+    }
+
+    public void readNews(News mNews){
+        Intent intent = new Intent(this, DescriptionActivity.class);
+        intent.putExtra("title",mNews.getTitle());
+        intent.putExtra("description",mNews.getDescription());
+        intent.putExtra("link",mNews.getLink());
+        startActivity(intent);
 
     }
 }
