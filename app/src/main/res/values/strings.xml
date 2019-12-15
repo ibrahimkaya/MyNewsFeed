@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">MyNewsFeed</string>
     <string name="action_settings">Settings</string>
+    <string name="banned_categories">Banned categories</string>
+    <string name="menu_banned">menu banned</string>
+    <string name="menu_refresh">menu refresh</string>
+    <string name="header_of_news">header of news</string>
+    <string name="description_of_news">description of news</string>
 </resources>

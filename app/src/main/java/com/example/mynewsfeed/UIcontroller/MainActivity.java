@@ -1,5 +1,6 @@
 package com.example.mynewsfeed.UIcontroller;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.mynewsfeed.Parser.NetworkActivity;
@@ -16,7 +17,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerLayout);
         final NewsListAdapter adapter = new NewsListAdapter(this);
@@ -64,19 +67,17 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        //handle selected item action
+        startMenuACtion(item.getItemId());
 
         return super.onOptionsItemSelected(item);
     }
 
     public void button(View view) {
-        parserToRoom();
+
     }
 
-    public void parserToRoom(){
+    public void fetchAndRoom(){
         NewsParser.News fetchedNews;
         News mTempNews;
         //start parsing xml
@@ -103,4 +104,19 @@ public class MainActivity extends AppCompatActivity {
         networkActivity.loadPage();
     }
 
+    public void startMenuACtion(int id){
+        Intent intent;
+
+
+        switch (id){
+            case R.id.ignored_source_menuItem:
+                 intent = new Intent(this,ListOfIgnoredSourceActivity.class);
+                 startActivity(intent);
+            case R.id.action_settings:
+                 //intent = new Intent(this,Settings.class);
+            case R.id.refresh_menu:
+                fetchAndRoom();
+        }
+
+    }
 }

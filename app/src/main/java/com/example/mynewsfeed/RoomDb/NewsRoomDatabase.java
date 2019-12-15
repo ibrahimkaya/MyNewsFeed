@@ -54,7 +54,7 @@ public abstract class NewsRoomDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(final Void... params){
             //açılışta ne yapacağın değişim kontrol sınıfları buraya gelmesi gerek
-            mDao.deleteAll();
+            // mDao.deleteAll();
         return null;
         }
 

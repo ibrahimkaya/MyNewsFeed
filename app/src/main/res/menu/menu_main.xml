@@ -7,4 +7,13 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item android:id="@+id/ignored_source_menuItem"
+        android:icon="@drawable/menu_banned"
+        app:showAsAction="always"
+        android:title="@string/menu_banned"/>
+    <item android:id="@+id/refresh_menu"
+        android:icon="@drawable/menu_refresh"
+        app:showAsAction="always"
+        android:title="@string/menu_refresh"/>
+
 </menu>

@@ -3,15 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    >
 
     <TextView
         android:id="@+id/news_header_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="header of news"
-        android:layout_marginTop="16dp"
-        android:background="@color/colorDesc"
+        android:text="@string/header_of_news"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorPrimaryLight"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintTop_toTopOf="parent"
         />
@@ -20,12 +22,13 @@
         android:id="@+id/news_desc_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="description of news"
+        android:text="@string/description_of_news"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="8dp"
-        android:background="@color/colorNewsHead2"
+        android:background="@color/colorTextPrimary"
         app:layout_constraintTop_toBottomOf="@id/news_header_tv"
         />
+
 
 
 </LinearLayout>
