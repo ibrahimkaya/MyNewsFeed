@@ -49,7 +49,7 @@ public class NewsRepository {
     }
 
     public void deleteAll(){
-        new insertAsyncTask(mNewsDao).execute();
+        new deleteAllAsyncTask(mNewsDao).execute();
     }
 
     private static class deleteAllAsyncTask extends AsyncTask<News ,Void,Void>{
