@@ -3,11 +3,14 @@ package com.example.mynewsfeed.UIcontroller;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.mynewsfeed.Parser.LastBuildDateParser;
 import com.example.mynewsfeed.Parser.NetworkActivity;
 import com.example.mynewsfeed.Parser.NewsParser;
 import com.example.mynewsfeed.R;
+import com.example.mynewsfeed.RoomDb.Build;
 import com.example.mynewsfeed.RoomDb.News;
 import com.example.mynewsfeed.UIcontroller.Adapter.NewsListAdapter;
+import com.example.mynewsfeed.ViewModel.BuildViewModel;
 import com.example.mynewsfeed.ViewModel.NewsViewModel;
 
 import androidx.annotation.NonNull;
@@ -19,6 +22,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,10 +30,12 @@ import android.widget.Toast;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NetworkActivity.AsyncResponse {
 
     NetworkActivity networkActivity =new NetworkActivity();
     private NewsViewModel mNewsViewModel;
+
+    private BuildViewModel mBuildViewModel;
 
 
     @Override
@@ -45,7 +51,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        //
+        networkActivity.delegate = this;
+
         mNewsViewModel = ViewModelProviders.of(this).get(NewsViewModel.class);
+        mBuildViewModel = ViewModelProviders.of(this).get(BuildViewModel.class);
 
         mNewsViewModel.getmAllNews().observe(this, new Observer<List<News>>() {
             @Override
@@ -79,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
         );
         helper.attachToRecyclerView(recyclerView);
 
-        loadXml();
     }
 
     @Override
@@ -94,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
         //handle selected item action
         startMenuACtion(item.getItemId());
@@ -107,47 +115,35 @@ public class MainActivity extends AppCompatActivity {
         mNewsViewModel.deleteAll();
     }
 
-    public void fetchAndRoom(){
-        NewsParser.News fetchedNews;
-        News mTempNews;
-        //start parsing xml
+    public void fetchNewsAndRoom(){
+        //chooser set by activity selected news type
+        networkActivity.chooseNetworkActivity("science");
+        //start loading  xml
         networkActivity.loadPage();
-        //if parsing complate
-        if(networkActivity.getFetchedNews() != null){
-            //generate entity onbject for item list size
-            for(int i = 0; i< networkActivity.getFetchedNews().size(); i++) {
-                //get ith element
-                fetchedNews = networkActivity.getFetchedNews().get(i);
-                mTempNews  = new News(fetchedNews.title,
-                                    fetchedNews.description,
-                                    fetchedNews.link,
-                                    fetchedNews.pubDate,
-                                    fetchedNews.creator,
-                                    fetchedNews.category);
-                //insert my entity
-                mNewsViewModel.insert(mTempNews);
-            }
-        }
     }
 
-    public void loadXml(){
+    public void fetchBuildsAndRoom(){
+        networkActivity.chooseNetworkActivity("build");
         networkActivity.loadPage();
     }
+
 
     public void startMenuACtion(int id){
         Intent intent;
-
 
         switch (id){
             case R.id.ignored_source_menuItem:
                  intent = new Intent(this,ListOfIgnoredSourceActivity.class);
                  startActivity(intent);
+                 break;
             case R.id.action_settings:
                  //intent = new Intent(this,Settings.class);
+                 break;
             case R.id.refresh_menu:
-                fetchAndRoom();
+                fetchNewsAndRoom();
+                //delete this
+                break;
         }
-
     }
 
     public void readNews(News mNews){
@@ -156,6 +152,43 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("description",mNews.getDescription());
         intent.putExtra("link",mNews.getLink());
         startActivity(intent);
-
     }
+
+    @Override
+    public void processFinish(String output){
+        // onPostExecute(result)
+
+        NewsParser.News fetchedNews;
+        News mTempNews;
+            //generate entity object for item list size
+        if(networkActivity.getFetchedNews() != null)
+            for(int i = 0; i< networkActivity.getFetchedNews().size(); i++) {
+                //get ith element
+                fetchedNews = networkActivity.getFetchedNews().get(i);
+                mTempNews  = new News(fetchedNews.title,
+                        fetchedNews.description,
+                        fetchedNews.link,
+                        fetchedNews.pubDate,
+                        fetchedNews.creator,
+                        fetchedNews.category);
+                //insert my entity
+                mNewsViewModel.insert(mTempNews);
+            }
+
+        LastBuildDateParser.BuildFeatures fetchedBuilds;
+        Build mBuildTemp;
+
+        if(networkActivity.getFetchedBuilds() != null){
+
+            for(int i = 0; i< networkActivity.getFetchedBuilds().size(); i++){
+                fetchedBuilds = networkActivity.getFetchedBuilds().get(i);
+                mBuildTemp = new Build(fetchedBuilds.title,
+                        fetchedBuilds.lastBuildDate);
+                Log.d("ozellikler",fetchedBuilds.title +" bu title " );
+                Log.d("ozellikler", "bu date    " + fetchedBuilds.lastBuildDate);
+                mBuildViewModel.insert(mBuildTemp);
+            }
+        }
+    }
+
 }
