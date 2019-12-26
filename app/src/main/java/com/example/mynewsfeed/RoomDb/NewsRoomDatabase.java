@@ -13,11 +13,13 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {News.class}, version = 1,exportSchema = false)
+@Database(entities = {News.class, Build.class}, version = 2,exportSchema = false)
 public abstract class NewsRoomDatabase extends RoomDatabase {
 
     public abstract NewsDao newsDao();
     private static NewsRoomDatabase INSTANCE;
+
+    public abstract BuildDao buildDao();
 
     public static NewsRoomDatabase getDatabase(final Context context){
         if(INSTANCE == null){
@@ -45,11 +47,12 @@ public abstract class NewsRoomDatabase extends RoomDatabase {
     //db yi oluşturma
     private static class PopulateDbAsync extends AsyncTask<Void, Void,Void>{
         private final NewsDao mDao;
-
+        private final BuildDao mBdao;
         //bilgiyi çektiğin yer
 
         PopulateDbAsync(NewsRoomDatabase db){
             mDao = db.newsDao();
+            mBdao = db.buildDao();
         }
         @Override
         protected Void doInBackground(final Void... params){
