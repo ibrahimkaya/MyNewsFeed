@@ -2,9 +2,6 @@ package com.example.mynewsfeed.Parser;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.util.Log;
-
-import com.example.mynewsfeed.ViewModel.NewsViewModel;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -18,9 +15,14 @@ import java.util.List;
 public class NetworkActivity extends Activity {
     public static final String WIFI = "Wi-Fi";
     public static final String ANY = "Any";
-    private static final String URL = "https://rss.nytimes.com/services/xml/rss/nyt/World.xml";
+    private static  String mURL = "https://rss.nytimes.com/services/xml/rss/nyt/World.xml";
 
     protected   List<NewsParser.News> fetchedNews;
+    protected List<LastBuildDateParser.BuildFeatures> fetchedBuilds;
+
+    private String networkActivityChoice = "build"; //default
+
+    public AsyncResponse delegate = null;
 /*
     // Whether there is a Wi-Fi connection.
     private static boolean wifiConnected = false;
@@ -32,15 +34,15 @@ public class NetworkActivity extends Activity {
 */
     public void loadPage(){
      //   if(sPref.equals(ANY) &&(wifiConnected || mobileConnected)){
-     //       new DownloadXmlTask().execute(URL);
+     //       new DownloadXmlTask().execute(mURL);
      //   }else if((sPref.equals(WIFI)) && (wifiConnected)){
-     //       new DownloadXmlTask().execute(URL);
+     //       new DownloadXmlTask().execute(mURL);
      //   }else{
      //       //err
      //       //pref kısmından dolayı
-     //       new DownloadXmlTask().execute(URL);
+     //       new DownloadXmlTask().execute(mURL);
      //   }
-        new DownloadXmlTask().execute(URL);
+        new DownloadXmlTask().execute(mURL);
     }
 
     private class DownloadXmlTask extends AsyncTask<String, Void, String>{
@@ -48,8 +50,12 @@ public class NetworkActivity extends Activity {
         @Override
         protected String doInBackground(String... urls){
             try{
-                //burayı editle
-                return loadXmlFromNetwork(urls[0]).toString();
+                if(networkActivityChoice.equals("build")){
+                    return loadXBuildFeaturesFromNetwork(urls[0]).toString();
+                }else {
+                    return loadXmlFromNetwork(urls[0]).toString();
+                }
+
             }catch (IOException e){
                // return getResources().getString(R.string.connection_error);
                 return "";
@@ -61,7 +67,9 @@ public class NetworkActivity extends Activity {
 
         @Override
         protected void onPostExecute(String result){
-            //UI da gösterme yada benim için rooma kaydetme
+            //
+            delegate.processFinish(result);
+
         }
     }
 
@@ -73,6 +81,7 @@ public class NetworkActivity extends Activity {
 
         try{
             stream = dowlandUrl(urlString);
+
             newsS = newsParser.parse(stream);
             fetchedNews = newsS;
         } finally {
@@ -81,6 +90,25 @@ public class NetworkActivity extends Activity {
             }
         }
         return newsS;
+    }
+
+    private List<LastBuildDateParser.BuildFeatures> loadXBuildFeaturesFromNetwork(String urlString) throws XmlPullParserException, IOException{
+        InputStream stream = null;
+
+        LastBuildDateParser lastBuildDateParser = new LastBuildDateParser();
+        List<LastBuildDateParser.BuildFeatures> buildFeatures;
+
+        try{
+            stream = dowlandUrl(urlString);
+            buildFeatures = lastBuildDateParser.parse(stream);
+            fetchedBuilds =buildFeatures;
+
+        } finally {
+            if(stream != null){
+                stream.close();
+            }
+        }
+        return buildFeatures;
     }
 
     private InputStream dowlandUrl(String urlString) throws IOException{
@@ -99,4 +127,29 @@ public class NetworkActivity extends Activity {
     public  List<NewsParser.News> getFetchedNews(){
          return fetchedNews;
     }
+    public List<LastBuildDateParser.BuildFeatures> getFetchedBuilds() { return fetchedBuilds; }
+
+  //    public void getResults opPostExecute u çağıran bir fonksiyon yaz onun üstünden eriş mainde
+
+    public void chooseNetworkActivity(String choice){
+        networkActivityChoice = choice;
+        //for fetching build feautres choice is build
+
+        switch (choice){
+            case "world":
+                mURL = "https://rss.nytimes.com/services/xml/rss/nyt/World.xml";
+                break;
+            case "science":
+                mURL = "https://rss.nytimes.com/services/xml/rss/nyt/Science.xml";
+                break;
+            case "sports":
+                mURL = "https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml";
+                break;
+        }
+    }
+
+    public interface AsyncResponse {
+        void processFinish(String output);
+    }
+
 }
