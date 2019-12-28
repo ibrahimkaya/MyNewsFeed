@@ -165,6 +165,10 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
         intent.putExtra("title",mNews.getTitle());
         intent.putExtra("description",mNews.getDescription());
         intent.putExtra("link",mNews.getLink());
+        intent.putExtra("pubDate",mNews.getPubDate());
+        intent.putExtra("category",mNews.getCategory());
+        intent.putExtra("creator",mNews.getCreator());
+        intent.putExtra("type",mNews.getType());
         startActivity(intent);
     }
 
