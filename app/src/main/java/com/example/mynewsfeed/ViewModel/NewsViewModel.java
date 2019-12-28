@@ -16,17 +16,34 @@ public class NewsViewModel extends AndroidViewModel {
     private NewsRepository mRepository;
     private LiveData<List<News>> mAllNews;
     private LiveData<List<String>> allNonValidCategory;
+    private LiveData<List<News>> scienceNews;
+    private LiveData<List<News>> sportNews;
+    private LiveData<List<News>> worldNews;
+
 
     public NewsViewModel(Application application){
         super(application);
         mRepository = new NewsRepository(application);
         mAllNews = mRepository.getmAllNews();
+        scienceNews = mRepository.getScienceNews();
+        sportNews = mRepository.getSportNews();
+        worldNews = mRepository.getWorldNews();
     }
 
     public LiveData<List<News>> getmAllNews(){
         return mAllNews;
     }
     public LiveData<List<String>> getAllNonValidCategory() { return allNonValidCategory;}
+
+    public LiveData<List<News>> getScienceNews(){
+        return scienceNews;
+    }
+    public LiveData<List<News>> getSportNews(){
+        return sportNews;
+    }
+    public LiveData<List<News>> getWorldNews(){
+        return worldNews;
+    }
 
     public void insert(News news){
         mRepository.insert(news);

@@ -15,16 +15,33 @@ public class NewsRepository {
     private NewsDao mNewsDao;
     private LiveData<List<News>> mAllNews;
     private LiveData<List<String>> allNonValidCategory;
+    private LiveData<List<News>> scienceNews;
+    private LiveData<List<News>> sportNews;
+    private LiveData<List<News>> worldNews;
+
 
 
     public NewsRepository(Application application){
         NewsRoomDatabase db = NewsRoomDatabase.getDatabase(application);
         mNewsDao = db.newsDao();
         mAllNews = mNewsDao.getAllNews();
+        scienceNews = mNewsDao.getAllNewsScience();
+        sportNews = mNewsDao.getAllNewsSport();
+        worldNews = mNewsDao.getAllNewsWorld();
     }
 
     public LiveData<List<News>> getmAllNews(){
         return mAllNews;
+    }
+
+    public LiveData<List<News>> getScienceNews(){
+        return scienceNews;
+    }
+    public LiveData<List<News>> getSportNews(){
+        return sportNews;
+    }
+    public LiveData<List<News>> getWorldNews(){
+        return worldNews;
     }
 
     public LiveData<List<String>> allNonValidCategory() { return allNonValidCategory;}

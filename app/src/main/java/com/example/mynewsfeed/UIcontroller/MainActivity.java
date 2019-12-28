@@ -42,6 +42,14 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
 
     private BuildViewModel mBuildViewModel;
 
+    RecyclerView recyclerView ;
+
+    NewsListAdapter adapterScience ;
+    NewsListAdapter adapterSport ;
+    NewsListAdapter adapterWorld ;
+
+
+
     public static String typeCoice = "world"; // default news source type
     Spinner typeSpinner;
 
@@ -53,9 +61,11 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerLayout);
-        final NewsListAdapter adapter = new NewsListAdapter(this);
-        recyclerView.setAdapter(adapter);
+        recyclerView = findViewById(R.id.recyclerLayout);
+        adapterScience = new NewsListAdapter(this);
+        adapterSport = new NewsListAdapter(this);
+        adapterWorld = new NewsListAdapter(this);
+        recyclerView.setAdapter(adapterWorld);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //
@@ -64,10 +74,24 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
         mNewsViewModel = ViewModelProviders.of(this).get(NewsViewModel.class);
         mBuildViewModel = ViewModelProviders.of(this).get(BuildViewModel.class);
 
-        mNewsViewModel.getmAllNews().observe(this, new Observer<List<News>>() {
+        mNewsViewModel.getScienceNews().observe(this, new Observer<List<News>>() {
             @Override
             public void onChanged(List<News> news) {
-                adapter.setNews(news);
+                adapterScience.setNews(news);
+            }
+        });
+
+        mNewsViewModel.getSportNews().observe(this, new Observer<List<News>>() {
+            @Override
+            public void onChanged(List<News> news) {
+                adapterSport.setNews(news);
+            }
+        });
+
+        mNewsViewModel.getWorldNews().observe(this, new Observer<List<News>>() {
+            @Override
+            public void onChanged(List<News> news) {
+                adapterWorld.setNews(news);
             }
         });
 
@@ -77,11 +101,23 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
                     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                         return false;
                     }
-
+                    //when swipe actions happend check whic adapter and do start another actvity for that data
                     @Override
                     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                         int position = viewHolder.getAdapterPosition();
-                        News mNews = adapter.getNewsAtPosition(position);
+                        News mNews = null;
+                        switch (typeCoice){
+                            case "World":
+                                mNews = adapterWorld.getNewsAtPosition(position);
+                                break;
+                            case "Science":
+                                mNews = adapterScience.getNewsAtPosition(position);
+                                break;
+                            case "Sports":
+                                mNews = adapterSport.getNewsAtPosition(position);
+                                break;
+                        }
+
 
                         switch (direction){
                             case ItemTouchHelper.LEFT:
@@ -90,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
                             case ItemTouchHelper.RIGHT:
                                 break;
                         }
-                        adapter.notifyItemChanged(position);
+                        recyclerView.getAdapter().notifyItemChanged(position);
                     }
                 }
         );
@@ -208,17 +244,30 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
         }
     }
 
-
-
-
+    //when get some chance news type spinner chance adapter for that type and notfy
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         typeCoice = typeSpinner.getSelectedItem().toString();
-        Log.d("ozellikler",typeSpinner.getSelectedItem().toString() +" bu secilen type " );
+        switch (typeCoice){
+            case "World":
+                recyclerView.setAdapter(adapterWorld);
+                adapterWorld.notifyDataSetChanged();
+                break;
+            case "Science":
+                recyclerView.setAdapter(adapterScience);
+                adapterScience.notifyDataSetChanged();
+                break;
+            case "Sports":
+                recyclerView.setAdapter(adapterSport);
+                adapterSport.notifyDataSetChanged();
+                break;
+        }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+
 }

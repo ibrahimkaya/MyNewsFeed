@@ -28,13 +28,10 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsVi
 
     @Override
     public void onBindViewHolder(NewsViewHolder holder, int position) {
-        if (mNews != null) {
+        if (mNews != null ) {
             News current = mNews.get(position);
             holder.newsHeaderTv.setText(current.getTitle());
             holder.newsDecsTV.setText(current.getDescription());
-        } else {
-            // Covers the case of data not being ready yet.
-            holder.newsHeaderTv.setText("No News");
         }
     }
 
@@ -46,9 +43,6 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.NewsVi
     public News getNewsAtPosition(int position){
         return mNews.get(position);
     }
-
-    // getItemCount() is called many times, and when it is first called,
-    // mWords has not been updated (means initially, it's null, and we can't return null).
     @Override
     public int getItemCount() {
         if (mNews != null)

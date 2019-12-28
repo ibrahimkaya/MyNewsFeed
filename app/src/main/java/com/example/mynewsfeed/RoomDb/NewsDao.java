@@ -1,6 +1,6 @@
 package com.example.mynewsfeed.RoomDb;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
@@ -22,6 +22,15 @@ public interface NewsDao {
 
     @Query("SELECT * FROM news_table")
     LiveData<List<News>> getAllNews();
+
+    @Query("SELECT * FROM news_table WHERE type = 'Sports'")
+    LiveData<List<News>> getAllNewsSport ();
+
+    @Query("SELECT * FROM news_table WHERE type = 'World'")
+    LiveData<List<News>> getAllNewsWorld ();
+
+    @Query("SELECT * FROM news_table WHERE type = 'Science'")
+    LiveData<List<News>> getAllNewsScience ();
 
     @Query("SELECT valid_category FROM news_table WHERE title = :title")
     Boolean getCategoryValidnes (String title);
