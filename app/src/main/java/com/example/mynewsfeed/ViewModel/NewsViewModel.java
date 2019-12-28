@@ -56,4 +56,8 @@ public class NewsViewModel extends AndroidViewModel {
         return mRepository.getPubDate(title);
     }
 
+    public AsyncTask<String, Void, String> getType(String title){
+        return mRepository.getType(title);
+    }
+
 }
