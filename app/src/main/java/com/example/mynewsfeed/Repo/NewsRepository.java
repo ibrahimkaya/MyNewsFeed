@@ -162,4 +162,22 @@ public class NewsRepository {
 
     }
 
+    public AsyncTask<String, Void, String> getType(String title){
+        return new getTypeAsyncTask(mNewsDao).execute(title);
+    }
+
+    private static class getTypeAsyncTask extends AsyncTask<String ,Void,String>{
+        private NewsDao mAsyncTaskDao;
+
+        getTypeAsyncTask(NewsDao dao){
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected String doInBackground(final String... params){
+            return mAsyncTaskDao.getType(params[0]);
+        }
+
+    }
+
 }

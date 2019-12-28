@@ -34,13 +34,17 @@ public class News {
     @ColumnInfo(name = "valid_category")
     boolean isValidCategory = true;
 
-    public News(@NonNull String title, String description, String link, String pubDate, String creator,String category){
+    @ColumnInfo(name = "type")
+    String type;
+
+    public News(@NonNull String title, String description, String link, String pubDate, String creator,String category,String type){
         this.title = title;
         this.description = description;
         this.link = link;
         this.pubDate = pubDate;
         this.creator = creator;
         this.category = category;
+        this.type = type;
     }
 
     @NonNull
@@ -71,5 +75,7 @@ public class News {
     public boolean isValidCategory() {
         return isValidCategory;
     }
+
+    public String getType(){ return type; }
 
 }

@@ -37,4 +37,8 @@ public interface NewsDao {
 
     @Query("SELECT pubDate FROM news_table WHERE title =:title")
     String getPubDate(String title);
+
+    @Query(("SELECT type FROM news_table WHERE title =:title"))
+    String getType (String title);
+
 }
