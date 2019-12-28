@@ -6,4 +6,12 @@
     <string name="menu_refresh">menu refresh</string>
     <string name="header_of_news">header of news</string>
     <string name="description_of_news">description of news</string>
+    <string name="welcome">WELCOME!</string>
+    <string name="delete_all_data">Delete All data</string>
+
+    <string-array name="newsType">
+        <item>World</item>
+        <item>Sports</item>
+        <item>Science</item>
+    </string-array>
 </resources>

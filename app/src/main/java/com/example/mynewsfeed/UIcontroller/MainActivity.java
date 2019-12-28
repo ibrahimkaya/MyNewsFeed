@@ -1,5 +1,6 @@
 package com.example.mynewsfeed.UIcontroller;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -26,17 +27,23 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NetworkActivity.AsyncResponse {
+public class MainActivity extends AppCompatActivity implements NetworkActivity.AsyncResponse, OnItemSelectedListener {
 
     NetworkActivity networkActivity =new NetworkActivity();
     private NewsViewModel mNewsViewModel;
 
     private BuildViewModel mBuildViewModel;
 
+    public static String typeCoice = "world"; // default news source type
+    Spinner typeSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +96,13 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
         );
         helper.attachToRecyclerView(recyclerView);
 
+        typeSpinner =  findViewById(R.id.news_type_spinner);
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.newsType, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        typeSpinner.setAdapter(spinnerAdapter);
+        typeSpinner.setOnItemSelectedListener(this);
+
     }
 
     @Override
@@ -117,11 +131,12 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
 
     public void fetchNewsAndRoom(){
         //chooser set by activity selected news type
-        networkActivity.chooseNetworkActivity("science");
+        networkActivity.chooseNetworkActivity(typeCoice);
         //start loading  xml
         networkActivity.loadPage();
     }
 
+    //fetch builds, for further implementations
     public void fetchBuildsAndRoom(){
         networkActivity.chooseNetworkActivity("build");
         networkActivity.loadPage();
@@ -141,7 +156,6 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
                  break;
             case R.id.refresh_menu:
                 fetchNewsAndRoom();
-                //delete this
                 break;
         }
     }
@@ -170,7 +184,8 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
                         fetchedNews.link,
                         fetchedNews.pubDate,
                         fetchedNews.creator,
-                        fetchedNews.category);
+                        fetchedNews.category,
+                        typeCoice);
                 //insert my entity
                 mNewsViewModel.insert(mTempNews);
             }
@@ -184,11 +199,22 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
                 fetchedBuilds = networkActivity.getFetchedBuilds().get(i);
                 mBuildTemp = new Build(fetchedBuilds.title,
                         fetchedBuilds.lastBuildDate);
-                Log.d("ozellikler",fetchedBuilds.title +" bu title " );
-                Log.d("ozellikler", "bu date    " + fetchedBuilds.lastBuildDate);
                 mBuildViewModel.insert(mBuildTemp);
             }
         }
     }
 
+
+
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        typeCoice = typeSpinner.getSelectedItem().toString();
+        Log.d("ozellikler",typeSpinner.getSelectedItem().toString() +" bu secilen type " );
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }
