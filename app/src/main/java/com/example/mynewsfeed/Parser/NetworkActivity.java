@@ -136,13 +136,13 @@ public class NetworkActivity extends Activity {
         //for fetching build feautres choice is build
 
         switch (choice){
-            case "world":
+            case "World":
                 mURL = "https://rss.nytimes.com/services/xml/rss/nyt/World.xml";
                 break;
-            case "science":
+            case "Science":
                 mURL = "https://rss.nytimes.com/services/xml/rss/nyt/Science.xml";
                 break;
-            case "sports":
+            case "Sports":
                 mURL = "https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml";
                 break;
         }
