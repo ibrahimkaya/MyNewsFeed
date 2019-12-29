@@ -188,7 +188,8 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
                  startActivity(intent);
                  break;
             case R.id.action_settings:
-                 //intent = new Intent(this,Settings.class);
+                 intent = new Intent(this, SettingsActivity.class);
+                 startActivity(intent);
                  break;
             case R.id.refresh_menu:
                 fetchNewsAndRoom();
