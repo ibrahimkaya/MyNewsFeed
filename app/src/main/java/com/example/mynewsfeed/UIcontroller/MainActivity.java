@@ -2,6 +2,10 @@ package com.example.mynewsfeed.UIcontroller;
 
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
 import com.example.mynewsfeed.Parser.LastBuildDateParser;
@@ -19,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,10 +53,15 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
     NewsListAdapter adapterSport ;
     NewsListAdapter adapterWorld ;
 
+    SharedPreferences sharedPreferences;
+    Boolean switchPref;
 
 
     public static String typeCoice = "world"; // default news source type
     Spinner typeSpinner;
+
+    private CustomReceiver mReceiver = new CustomReceiver();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +149,26 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
         typeSpinner.setAdapter(spinnerAdapter);
         typeSpinner.setOnItemSelectedListener(this);
 
+        //for didnt change user settings
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+        //saving user pref
+         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+         switchPref = sharedPreferences.getBoolean(SettingsActivity.KEY_PREF_WİFİ_NOTFY, false);
+         Toast.makeText(this,switchPref.toString(), Toast.LENGTH_SHORT).show();
+
+         //for reciving wifi state broadcast,  if some connectivity actions happend reciver can call customReciver
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        this.registerReceiver(mReceiver,filter);
+
+    }
+
+    @Override
+    public void onDestroy(){
+        if(mReceiver != null)
+        this.unregisterReceiver(mReceiver);
+        super.onDestroy();
     }
 
     @Override
