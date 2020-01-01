@@ -28,6 +28,7 @@ public class NewsViewModel extends AndroidViewModel {
         scienceNews = mRepository.getScienceNews();
         sportNews = mRepository.getSportNews();
         worldNews = mRepository.getWorldNews();
+        allNonValidCategory = mRepository.allNonValidCategory();
     }
 
     public LiveData<List<News>> getmAllNews(){

@@ -28,6 +28,7 @@ public class NewsRepository {
         scienceNews = mNewsDao.getAllNewsScience();
         sportNews = mNewsDao.getAllNewsSport();
         worldNews = mNewsDao.getAllNewsWorld();
+        allNonValidCategory = mNewsDao.getAllNonVaildCategory();
     }
 
     public LiveData<List<News>> getmAllNews(){

@@ -45,6 +45,10 @@ public class NetworkActivity extends Activity {
         new DownloadXmlTask().execute(mURL);
     }
 
+    public String getNetworkActivityChoice() {
+        return networkActivityChoice;
+    }
+
     private class DownloadXmlTask extends AsyncTask<String, Void, String>{
 
         @Override
@@ -68,6 +72,7 @@ public class NetworkActivity extends Activity {
         @Override
         protected void onPostExecute(String result){
             //
+            if(result != null)
             delegate.processFinish(result);
 
         }

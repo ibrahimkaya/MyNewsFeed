@@ -1,6 +1,11 @@
 package com.example.mynewsfeed.UIcontroller;
 
 
+import android.app.job.JobInfo;
+import android.app.job.JobParameters;
+import android.app.job.JobScheduler;
+import android.app.job.JobService;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -19,6 +24,7 @@ import com.example.mynewsfeed.ViewModel.BuildViewModel;
 import com.example.mynewsfeed.ViewModel.NewsViewModel;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -62,7 +68,10 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
 
     private CustomReceiver mReceiver = new CustomReceiver();
 
+    private JobScheduler jobScheduler;
+    private static final int JOB_ID = 0;
 
+    @RequiresApi(api = android.os.Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
         //
         networkActivity.delegate = this;
 
+        //3 difrent adapter for 3 difrent data source
         mNewsViewModel = ViewModelProviders.of(this).get(NewsViewModel.class);
         mBuildViewModel = ViewModelProviders.of(this).get(BuildViewModel.class);
 
@@ -162,6 +172,11 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
         IntentFilter filter = new IntentFilter();
         filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         this.registerReceiver(mReceiver,filter);
+
+        jobScheduler =(JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+
+        scheduleJob();
+
 
     }
 
@@ -302,5 +317,34 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
 
     }
 
+    @RequiresApi(api = android.os.Build.VERSION_CODES.LOLLIPOP)
+    public void scheduleJob(){
+
+        int selectedNetworkOption = JobInfo.NETWORK_TYPE_ANY;
+        //get jobs conditions
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        switchPref = sharedPreferences.getBoolean(SettingsActivity.KEY_PREF_WİFİ_NOTFY, false);
+
+
+        ComponentName serviceName = new ComponentName(getPackageName(),
+                UpdateJobService.class.getName());
+        JobInfo.Builder builder = new JobInfo.Builder(JOB_ID, serviceName)
+                .setRequiredNetworkType(selectedNetworkOption);
+
+        if(!switchPref){
+            JobInfo myJobInfo = builder.build();
+            jobScheduler.schedule(myJobInfo);
+            Toast.makeText(this, "Notification is open!", Toast.LENGTH_SHORT)
+                    .show();
+            //deley for jobs
+            builder.setOverrideDeadline(1000);
+
+
+        }else{
+            Toast.makeText(this, "No longer recive  any notification", Toast.LENGTH_SHORT).show();
+            jobScheduler.cancelAll();
+        }
+
+    }
 
 }

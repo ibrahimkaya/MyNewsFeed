@@ -6,11 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".UIcontroller.ListOfIgnoredSourceActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ignored_source_recview"
+    <ListView
+        android:id="@+id/ignored_source_listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/sources_one_row"
+        android:padding="16dp"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
