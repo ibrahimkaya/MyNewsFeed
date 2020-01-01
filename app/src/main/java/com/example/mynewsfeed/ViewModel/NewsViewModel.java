@@ -57,7 +57,7 @@ public class NewsViewModel extends AndroidViewModel {
         mRepository.deleteWhereTitle(title);
     }
 
-    public AsyncTask<String, Void, Boolean> getCategoryValidnes(String title){
+    public AsyncTask<String, Void, String> getCategoryValidnes(String title){
         return mRepository.getCategoryValidnes(title);
     }
 

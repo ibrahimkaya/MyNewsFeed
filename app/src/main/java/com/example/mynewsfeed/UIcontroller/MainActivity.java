@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
                                 readNews(mNews);
                                 break;
                             case ItemTouchHelper.RIGHT:
+                                mNewsViewModel.setCategoryFalse(mNews.getCategory());
                                 break;
                         }
                         recyclerView.getAdapter().notifyItemChanged(position);
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
         //saving user pref
          sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
          switchPref = sharedPreferences.getBoolean(SettingsActivity.KEY_PREF_WİFİ_NOTFY, false);
-         Toast.makeText(this,switchPref.toString(), Toast.LENGTH_SHORT).show();
+         //Toast.makeText(this,switchPref.toString(), Toast.LENGTH_SHORT).show();
 
          //for reciving wifi state broadcast,  if some connectivity actions happend reciver can call customReciver
         IntentFilter filter = new IntentFilter();
@@ -238,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
         intent.putExtra("type",mNews.getType());
         startActivity(intent);
     }
+
 
     @Override
     public void processFinish(String output){

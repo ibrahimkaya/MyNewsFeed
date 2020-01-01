@@ -13,7 +13,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {News.class, Build.class}, version = 3,exportSchema = false)
+@Database(entities = {News.class, Build.class}, version = 4,exportSchema = false)
 public abstract class NewsRoomDatabase extends RoomDatabase {
 
     public abstract NewsDao newsDao();

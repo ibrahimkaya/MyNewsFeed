@@ -103,11 +103,11 @@ public class NewsRepository {
 
     }
 
-    public AsyncTask<String, Void, Boolean> getCategoryValidnes(String title){
+    public AsyncTask<String, Void, String> getCategoryValidnes(String title){
        return new getCategoryValidnesAsyncTask(mNewsDao).execute(title);
     }
 
-    private static class getCategoryValidnesAsyncTask extends AsyncTask<String ,Void,Boolean>{
+    private static class getCategoryValidnesAsyncTask extends AsyncTask<String ,Void,String>{
         private NewsDao mAsyncTaskDao;
 
         getCategoryValidnesAsyncTask(NewsDao dao){
@@ -115,7 +115,7 @@ public class NewsRepository {
         }
 
         @Override
-        protected Boolean doInBackground(final String... params){
+        protected String doInBackground(final String... params){
             return mAsyncTaskDao.getCategoryValidnes(params[0]);
         }
 
@@ -134,7 +134,7 @@ public class NewsRepository {
 
         @Override
         protected Void doInBackground(final String... params){
-            for (String param : params) mAsyncTaskDao.setCategoryFalse(param);
+            mAsyncTaskDao.setCategoryFalse(params[0]);
             return null;
         }
 

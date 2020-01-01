@@ -23,17 +23,17 @@ public interface NewsDao {
     @Query("SELECT * FROM news_table")
     LiveData<List<News>> getAllNews();
 
-    @Query("SELECT * FROM news_table WHERE type = 'Sports'")
+    @Query("SELECT * FROM news_table WHERE type = 'Sports' AND valid_category = 'true' ")
     LiveData<List<News>> getAllNewsSport ();
 
-    @Query("SELECT * FROM news_table WHERE type = 'World'")
+    @Query("SELECT * FROM news_table WHERE type = 'World' AND valid_category= 'true' ")
     LiveData<List<News>> getAllNewsWorld ();
 
-    @Query("SELECT * FROM news_table WHERE type = 'Science'")
+    @Query("SELECT * FROM news_table WHERE type = 'Science' AND valid_category = 'true' ")
     LiveData<List<News>> getAllNewsScience ();
 
     @Query("SELECT valid_category FROM news_table WHERE title = :title")
-    Boolean getCategoryValidnes (String title);
+    String getCategoryValidnes (String title);
 
     @Query("UPDATE news_table SET valid_category = 'false' WHERE category =:category")
     void setCategoryFalse ( String category);

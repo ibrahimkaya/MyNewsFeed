@@ -32,7 +32,7 @@ public class News {
     String category ;
 
     @ColumnInfo(name = "valid_category")
-    boolean isValidCategory = true;
+    String isValidCategory = "true";
 
     @ColumnInfo(name = "type")
     String type;
@@ -72,7 +72,7 @@ public class News {
         return category;
     }
 
-    public boolean isValidCategory() {
+    public String isValidCategory() {
         return isValidCategory;
     }
 
