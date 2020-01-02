@@ -44,6 +44,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NetworkActivity.AsyncResponse, OnItemSelectedListener {
@@ -61,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
 
     SharedPreferences sharedPreferences;
     Boolean switchPref;
+
+    ArrayList<String> bannedCategory = new ArrayList<>();
 
 
     public static String typeCoice = "world"; // default news source type
@@ -142,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
                                 readNews(mNews);
                                 break;
                             case ItemTouchHelper.RIGHT:
+                                bannedCategory.add(mNews.getCategory());
                                 mNewsViewModel.setCategoryFalse(mNews.getCategory());
                                 break;
                         }
@@ -222,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
         switch (id){
             case R.id.ignored_source_menuItem:
                  intent = new Intent(this,ListOfIgnoredSourceActivity.class);
+                 intent.putExtra("list_of_banned",bannedCategory);
                  startActivity(intent);
                  break;
             case R.id.action_settings:
