@@ -7,8 +7,4 @@
         android:summary="Turn of notification"
         android:title="Notification Settings"
         />
-
-
-
-
 </PreferenceScreen>

@@ -87,8 +87,6 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
         recyclerView.setAdapter(adapterWorld);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //
-        networkActivity.delegate = this;
 
         //3 difrent adapter for 3 difrent data source
         mNewsViewModel = ViewModelProviders.of(this).get(NewsViewModel.class);
@@ -115,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
             }
         });
 
+        networkActivity.delegate = this;
+
         ItemTouchHelper helper = new ItemTouchHelper(
                 new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT |ItemTouchHelper.RIGHT) {
                     @Override
@@ -137,8 +137,6 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
                                 mNews = adapterSport.getNewsAtPosition(position);
                                 break;
                         }
-
-
                         switch (direction){
                             case ItemTouchHelper.LEFT:
                                 readNews(mNews);
@@ -166,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
         //saving user pref
          sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
          switchPref = sharedPreferences.getBoolean(SettingsActivity.KEY_PREF_WİFİ_NOTFY, false);
-         //Toast.makeText(this,switchPref.toString(), Toast.LENGTH_SHORT).show();
 
          //for reciving wifi state broadcast,  if some connectivity actions happend reciver can call customReciver
         IntentFilter filter = new IntentFilter();
@@ -180,12 +177,6 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
 
     }
 
-    @Override
-    public void onDestroy(){
-        if(mReceiver != null)
-        this.unregisterReceiver(mReceiver);
-        super.onDestroy();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -259,7 +250,6 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
     @Override
     public void processFinish(String output){
         // onPostExecute(result)
-
         NewsParser.News fetchedNews;
         News mTempNews;
             //generate entity object for item list size
@@ -277,7 +267,6 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
                 //insert my entity
                 mNewsViewModel.insert(mTempNews);
             }
-
         LastBuildDateParser.BuildFeatures fetchedBuilds;
         Build mBuildTemp;
 
@@ -325,7 +314,6 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         switchPref = sharedPreferences.getBoolean(SettingsActivity.KEY_PREF_WİFİ_NOTFY, false);
 
-
         ComponentName serviceName = new ComponentName(getPackageName(),
                 UpdateJobService.class.getName());
         JobInfo.Builder builder = new JobInfo.Builder(JOB_ID, serviceName)
@@ -336,15 +324,20 @@ public class MainActivity extends AppCompatActivity implements NetworkActivity.A
             jobScheduler.schedule(myJobInfo);
             Toast.makeText(this, "Notification is open!", Toast.LENGTH_SHORT)
                     .show();
-            //deley for jobs
+            //daley for jobs
             builder.setOverrideDeadline(1000);
-
-
         }else{
             Toast.makeText(this, "No longer recive  any notification", Toast.LENGTH_SHORT).show();
             jobScheduler.cancelAll();
         }
 
+    }
+
+    @Override
+    public void onDestroy(){
+        if(mReceiver != null)
+            this.unregisterReceiver(mReceiver);
+        super.onDestroy();
     }
 
 }

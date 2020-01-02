@@ -18,7 +18,6 @@ public abstract class NewsRoomDatabase extends RoomDatabase {
 
     public abstract NewsDao newsDao();
     private static NewsRoomDatabase INSTANCE;
-
     public abstract BuildDao buildDao();
 
     public static NewsRoomDatabase getDatabase(final Context context){
@@ -44,11 +43,9 @@ public abstract class NewsRoomDatabase extends RoomDatabase {
         }
     };
 
-    //db yi oluşturma
     private static class PopulateDbAsync extends AsyncTask<Void, Void,Void>{
         private final NewsDao mDao;
         private final BuildDao mBdao;
-        //bilgiyi çektiğin yer
 
         PopulateDbAsync(NewsRoomDatabase db){
             mDao = db.newsDao();

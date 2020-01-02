@@ -16,7 +16,6 @@ import androidx.core.app.NotificationCompat;
 public class UpdateJobService extends JobService {
 
     NotificationManager mNotifyManager;
-
     // Notification channel ID.
     private static final String PRIMARY_CHANNEL_ID =
             "primary_notification_channel";

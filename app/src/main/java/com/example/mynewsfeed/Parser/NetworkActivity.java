@@ -13,8 +13,7 @@ import java.net.URL;
 import java.util.List;
 
 public class NetworkActivity extends Activity {
-    public static final String WIFI = "Wi-Fi";
-    public static final String ANY = "Any";
+
     private static  String mURL = "https://rss.nytimes.com/services/xml/rss/nyt/World.xml";
 
     protected   List<NewsParser.News> fetchedNews;
@@ -23,31 +22,11 @@ public class NetworkActivity extends Activity {
     private String networkActivityChoice = "build"; //default
 
     public AsyncResponse delegate = null;
-/*
-    // Whether there is a Wi-Fi connection.
-    private static boolean wifiConnected = false;
-    // Whether there is a mobile connection.
-    private static boolean mobileConnected = false;
-    // Whether the display should be refreshed.
-    public static boolean refreshDisplay = true;
-    public static String sPref = null;
-*/
+
     public void loadPage(){
-     //   if(sPref.equals(ANY) &&(wifiConnected || mobileConnected)){
-     //       new DownloadXmlTask().execute(mURL);
-     //   }else if((sPref.equals(WIFI)) && (wifiConnected)){
-     //       new DownloadXmlTask().execute(mURL);
-     //   }else{
-     //       //err
-     //       //pref kısmından dolayı
-     //       new DownloadXmlTask().execute(mURL);
-     //   }
         new DownloadXmlTask().execute(mURL);
     }
 
-    public String getNetworkActivityChoice() {
-        return networkActivityChoice;
-    }
 
     private class DownloadXmlTask extends AsyncTask<String, Void, String>{
 
@@ -59,12 +38,9 @@ public class NetworkActivity extends Activity {
                 }else {
                     return loadXmlFromNetwork(urls[0]).toString();
                 }
-
             }catch (IOException e){
-               // return getResources().getString(R.string.connection_error);
                 return "";
             }catch (XmlPullParserException e){
-                //return getResources().getString(R.string.xml_error);
                 return "";
             }
         }
@@ -74,19 +50,15 @@ public class NetworkActivity extends Activity {
             //
             if(result != null)
             delegate.processFinish(result);
-
         }
     }
 
     private List<NewsParser.News> loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException{
         InputStream stream = null;
-
         NewsParser newsParser = new NewsParser();
         List<NewsParser.News> newsS ;
-
         try{
             stream = dowlandUrl(urlString);
-
             newsS = newsParser.parse(stream);
             fetchedNews = newsS;
         } finally {
@@ -99,15 +71,12 @@ public class NetworkActivity extends Activity {
 
     private List<LastBuildDateParser.BuildFeatures> loadXBuildFeaturesFromNetwork(String urlString) throws XmlPullParserException, IOException{
         InputStream stream = null;
-
         LastBuildDateParser lastBuildDateParser = new LastBuildDateParser();
         List<LastBuildDateParser.BuildFeatures> buildFeatures;
-
         try{
             stream = dowlandUrl(urlString);
             buildFeatures = lastBuildDateParser.parse(stream);
             fetchedBuilds =buildFeatures;
-
         } finally {
             if(stream != null){
                 stream.close();
@@ -133,8 +102,6 @@ public class NetworkActivity extends Activity {
          return fetchedNews;
     }
     public List<LastBuildDateParser.BuildFeatures> getFetchedBuilds() { return fetchedBuilds; }
-
-  //    public void getResults opPostExecute u çağıran bir fonksiyon yaz onun üstünden eriş mainde
 
     public void chooseNetworkActivity(String choice){
         networkActivityChoice = choice;

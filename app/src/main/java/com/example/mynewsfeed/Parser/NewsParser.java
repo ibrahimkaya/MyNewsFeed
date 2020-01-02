@@ -14,7 +14,6 @@ public class NewsParser {
     private static final String ns = null;
 
     public List parse(InputStream in) throws XmlPullParserException, IOException {
-
         //initilize parser and features
         try{
             XmlPullParser parser = Xml.newPullParser();
